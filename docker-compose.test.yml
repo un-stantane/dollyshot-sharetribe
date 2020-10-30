@@ -1,0 +1,46 @@
+version: '2'
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    mem_limit: 512m
+    environment:
+      - PASSENGER_MIN_INSTANCES=1
+      - PASSENGER_MAX_POOL_SIZE=2
+      - DB_HOST=db
+    ports:
+      - "80:3000"
+      - "443:3000"
+    depends_on:
+      - db
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    mem_limit: 512m
+    environment:
+      - QUEUES=default,paperclip,mailers
+      - MAGICK_MAP_LIMIT=64MiB
+      - MAGICK_MEMORY_LIMIT=256MiB
+      - MAGICK_TIME_LIMIT=30
+      - DB_HOST=db
+    command: [ "script/startup.sh", "worker" ]
+    depends_on:
+      - db
+  shredder:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    mem_limit: 512m
+    command: [ "script/startup.sh", "shredder" ]
+  db:
+    image: mysql:5.7
+    command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    volumes:
+        - ./docker/mysql/init:/docker-entrypoint-initdb.d
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: local
