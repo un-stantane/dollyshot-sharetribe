@@ -105,7 +105,6 @@ gem 'mail', '~> 2.6.6.rc1'
 gem 'tzinfo-data', '~> 1.2017', '>= 1.2017.2'
 
 group :staging, :production do
-  gem 'newrelic_rpm', '~> 4.2.0.334'
   gem 'rails_12factor', '~> 0.0.3'
 end
 
@@ -118,8 +117,11 @@ group :development, :staging do
   gem 'meta_request', '~> 0.6.0'
 end
 
+group :development, :production do
+  gem 'newrelic_rpm', '~> 6.13.1'
+end
+
 group :development do
-  gem 'newrelic_rpm', '~> 4.2.0.334'
   gem 'rb-fsevent', '~> 0.9.8', require: false
   gem 'guard-rspec', '~> 4.7.3', require: false
   gem 'listen', '~> 3.1.5'
