@@ -119,6 +119,7 @@ group :development, :staging do
 end
 
 group :development do
+  gem 'newrelic_rpm', '~> 4.2.0.334'
   gem 'rb-fsevent', '~> 0.9.8', require: false
   gem 'guard-rspec', '~> 4.7.3', require: false
   gem 'listen', '~> 3.1.5'
